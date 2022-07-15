@@ -1,0 +1,37 @@
+name: build-lint-test
+
+on:
+  pull_request:
+    branches:
+      - master
+
+env:
+  PUBSUB_EMULATOR_HOST: localhost:8085
+
+jobs:
+  build-lint-test:
+    runs-on: ubuntu-latest
+    steps:
+
+      # checkout
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # start emulator
+
+      - uses: google-github-actions/setup-gcloud@v0
+        with:
+          install_components: 'beta,pubsub-emulator'
+      - run: gcloud beta emulators pubsub start --project=testproject --host-port=0.0.0.0:8085 &
+
+      # run tests
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm run lint
+      - run: npm t
+      - run: npm run build

@@ -1,0 +1,74 @@
+name: on-push
+
+on:
+  push:
+    branches:
+      - '**/*'
+
+env:
+  PUBSUB_EMULATOR_HOST: localhost:8085
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # checkout
+
+      - uses: actions/checkout@v3
+
+      # start emulator
+
+      - uses: google-github-actions/setup-gcloud@v0
+        with:
+          install_components: 'beta,pubsub-emulator'
+      - run: gcloud beta emulators pubsub start --project=testproject --host-port=0.0.0.0:8085 &
+
+      # run tests
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm run lint
+      - uses: actions/cache@v3
+        with:
+          path: coverage
+          key: ${{ github.sha }}
+      - run: npm t
+      - run: npm run build
+
+  publish:
+    if: github.ref == 'refs/heads/master' && github.actor != 'dependabot[bot]' && github.actor != 'mergify[bot]'
+    runs-on: ubuntu-latest
+    steps:
+
+      # checkout
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # push test coverage
+
+      - uses: actions/cache@v3
+        with:
+          path: coverage
+          key: ${{ github.sha }}
+      - uses: paambaati/codeclimate-action@v2.7.5
+        with:
+          coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
+
+      # build and publish
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm version --no-git-tag-version $(git describe --abbrev=0 --tags)-alpha.$(git rev-parse --short=6 ${{ github.sha }}) || true
+      - run: npm publish --tag alpha || true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
