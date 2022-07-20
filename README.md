@@ -29,9 +29,7 @@ No topics and subscriptions are created automatically. Because we care about [se
 
 ---
 
-<center>
-<b>No request-response messaging support and it won't be added, as it's better to use appropriate RPC transports</b>
-</center>
+<p align="center"><b>No request-response messaging support and it won't be added, as it's better to use appropriate RPC transports</b></p>
 
 ---
 

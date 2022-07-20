@@ -69,6 +69,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 14
+          registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm version --no-git-tag-version $(git describe --abbrev=0 --tags)-alpha.$(git rev-parse --short=6 ${{ github.sha }}) || true
       - run: npm publish --tag alpha || true
