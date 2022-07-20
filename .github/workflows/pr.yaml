@@ -3,7 +3,7 @@ name: build-lint-test
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 env:
   PUBSUB_EMULATOR_HOST: localhost:8085
