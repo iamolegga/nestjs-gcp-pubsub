@@ -40,7 +40,7 @@ jobs:
       - run: npm run build
 
   publish:
-    if: github.ref == 'refs/heads/master' && github.actor != 'dependabot[bot]' && github.actor != 'mergify[bot]'
+    if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]' && github.actor != 'mergify[bot]'
     runs-on: ubuntu-latest
     steps:
 

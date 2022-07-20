@@ -8,7 +8,7 @@
     <img alt="GitHub branch checks state" src="https://badgen.net/github/checks/iamolegga/nestjs-gcp-pubsub">
   </a>
   <a href="https://codeclimate.com/github/iamolegga/nestjs-gcp-pubsub/test_coverage">
-    <img src="https://api.codeclimate.com/v1/badges/XXXXXXXXXXXX/test_coverage" />
+    <img src="https://api.codeclimate.com/v1/badges/28ec1572289cf56bc6fd/test_coverage" />
   </a>
   <a href="https://snyk.io/test/github/iamolegga/nestjs-gcp-pubsub">
     <img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/snyk/vulnerabilities/npm/nestjs-gcp-pubsub" />
