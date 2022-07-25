@@ -10,6 +10,13 @@ env:
 
 jobs:
   build-lint-test:
+    strategy:
+      fail-fast: true
+      matrix:
+        version:
+          - "8"
+          - "9"
+
     runs-on: ubuntu-latest
     steps:
 
@@ -32,6 +39,7 @@ jobs:
         with:
           node-version: 14
       - run: npm ci
+      - run: npm i @nestjs/common@${{ matrix.version }} @nestjs/core@${{ matrix.version }} @nestjs/microservices@${{ matrix.version }} -D
       - run: npm run lint
       - run: npm t
       - run: npm run build
