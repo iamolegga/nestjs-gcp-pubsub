@@ -14,3 +14,5 @@ pull_request_rules:
   actions:
     queue:
       name: dependabot-nestjs-gcp-pubsub
+      method: rebase
+      rebase_fallback: none
