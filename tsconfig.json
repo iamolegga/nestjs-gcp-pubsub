@@ -3,7 +3,7 @@
     "lib": ["ES2019"],
     "module": "commonjs",
     "target": "ES2019",
-    "removeComments": true,
+    "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
@@ -15,6 +15,7 @@
     "skipLibCheck": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "typeRoots": ["src/typings", "node_modules/@types"]
+    "typeRoots": ["src/typings", "node_modules/@types"],
+    "declaration": true
   }
 }
