@@ -1,6 +1,6 @@
 {
   "name": "nestjs-gcp-pubsub",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "NestJS microservice transport for GCP PubSub",
   "main": "index.js",
   "scripts": {
