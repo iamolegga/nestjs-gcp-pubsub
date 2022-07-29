@@ -2,15 +2,19 @@ queue_rules:
   - name: dependabot-nestjs-gcp-pubsub
     conditions:
       - author~=^dependabot(|-preview)\[bot\]$
-      - status-success=build-lint-test
-      - status-success=security/snyk (iamolegga)
+      - check-success=test
+      - -check-failure~=build-lint-test
+      - check-success~=build-lint-test
+      - check-success=security/snyk (iamolegga)
 
 pull_request_rules:
 - name: merge pull requests from dependabot if CI passes
   conditions:
     - author~=^dependabot(|-preview)\[bot\]$
-    - status-success=build-lint-test
-    - status-success=security/snyk (iamolegga)
+    - check-success=test
+    - -check-failure~=build-lint-test
+    - check-success~=build-lint-test
+    - check-success=security/snyk (iamolegga)
   actions:
     queue:
       name: dependabot-nestjs-gcp-pubsub
