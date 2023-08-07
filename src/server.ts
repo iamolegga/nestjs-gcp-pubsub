@@ -16,12 +16,13 @@ export class GCPPubSubStrategy
   extends Server
   implements CustomTransportStrategy
 {
-  protected readonly logger = new Logger(GCPPubSubStrategy.name);
+  protected readonly logger: Logger;
   private readonly subscriptions: Record<string, Subscription> = {};
 
   constructor(private readonly opts: GCPPubSubServerOptions) {
     super();
     this.deserializer = opts.deserializer ?? new JSONDeserializer();
+    this.logger = opts.logger ?? new Logger(GCPPubSubStrategy.name);
   }
 
   async listen(callback?: () => void) {
