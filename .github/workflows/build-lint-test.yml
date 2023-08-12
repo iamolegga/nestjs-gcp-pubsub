@@ -1,9 +1,7 @@
 name: build-lint-test
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_call:
 
 env:
   PUBSUB_EMULATOR_HOST: localhost:8085
@@ -13,15 +11,18 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        version:
+        nestjs-version:
           - "8"
           - "9"
+          - "10"
+        nodejs-version:
+          - 16
+          - 18
+          - 20
 
     runs-on: ubuntu-latest
+
     steps:
-
-      # checkout
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -33,13 +34,20 @@ jobs:
           install_components: 'beta,pubsub-emulator'
       - run: gcloud beta emulators pubsub start --project=testproject --host-port=0.0.0.0:8085 &
 
-      # run tests
-
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: ${{ matrix.nodejs-version }}
       - run: npm ci
-      - run: npm i @nestjs/common@${{ matrix.version }} @nestjs/core@${{ matrix.version }} @nestjs/microservices@${{ matrix.version }} -D
+      - run: |
+          npm i @nestjs/core@${{ matrix.nestjs-version }} \
+                @nestjs/common@${{ matrix.nestjs-version }} \
+                @nestjs/microservices@${{ matrix.nestjs-version }} \
+                @types/node@${{ matrix.nodejs-version }} \
+                -D
       - run: npm run lint
+      - uses: actions/cache@v3
+        with:
+          path: coverage
+          key: ${{ github.sha }}-${{ matrix.nestjs-version }}-${{ matrix.nodejs-version }}
       - run: npm t
       - run: npm run build
