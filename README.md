@@ -11,7 +11,7 @@
     <img src="https://api.codeclimate.com/v1/badges/28ec1572289cf56bc6fd/test_coverage" />
   </a>
   <a href="https://snyk.io/test/github/iamolegga/nestjs-gcp-pubsub">
-    <img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/snyk/vulnerabilities/npm/nestjs-gcp-pubsub" />
+    <img alt="Known Vulnerabilities" src="https://snyk.io/test/github/iamolegga/nestjs-gcp-pubsub/badge.svg" />
   </a>
   <a href="https://libraries.io/npm/nestjs-gcp-pubsub">
     <img alt="Libraries.io" src="https://img.shields.io/librariesio/release/npm/nestjs-gcp-pubsub">
