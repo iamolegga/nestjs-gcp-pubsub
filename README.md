@@ -4,6 +4,9 @@
   <a href="https://www.npmjs.com/package/nestjs-gcp-pubsub">
     <img alt="npm" src="https://img.shields.io/npm/v/nestjs-gcp-pubsub" />
   </a>
+  <a href="https://www.npmjs.com/package/nestjs-gcp-pubsub">
+    <img alt="npm" src="https://img.shields.io/npm/dm/nestjs-gcp-pubsub?style=flat-square" />
+  </a>
   <a href="https://github.com/iamolegga/nestjs-gcp-pubsub/actions">
     <img alt="GitHub branch checks state" src="https://badgen.net/github/checks/iamolegga/nestjs-gcp-pubsub">
   </a>
@@ -148,3 +151,7 @@ class TestController {
   }
 }
 ```
+
+<h2 align="center">Do you use this library?<br/>Don't be shy to give it a star! ★</h2>
+
+<h3 align="center">Also if you are into NestJS you might be interested in one of my <a href="https://github.com/iamolegga#nestjs">other NestJS libs</a>.</h3>
