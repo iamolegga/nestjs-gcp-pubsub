@@ -5,7 +5,7 @@
     <img alt="npm" src="https://img.shields.io/npm/v/nestjs-gcp-pubsub" />
   </a>
   <a href="https://www.npmjs.com/package/nestjs-gcp-pubsub">
-    <img alt="npm" src="https://img.shields.io/npm/dm/nestjs-gcp-pubsub?style=flat-square" />
+    <img alt="npm" src="https://img.shields.io/npm/dm/nestjs-gcp-pubsub" />
   </a>
   <a href="https://github.com/iamolegga/nestjs-gcp-pubsub/actions">
     <img alt="GitHub branch checks state" src="https://badgen.net/github/checks/iamolegga/nestjs-gcp-pubsub">
