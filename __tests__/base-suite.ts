@@ -50,7 +50,13 @@ export abstract class Base {
       { strategy: this.strategy },
     );
 
-    await this.app.listen();
+    // hack for different nestjs version
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if ('listenAsync' in this.app) await this.app.listenAsync();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    else await this.app.listen();
   }
 
   async after() {
