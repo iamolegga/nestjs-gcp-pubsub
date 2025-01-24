@@ -24,6 +24,10 @@ export class GCPPubSubClient extends ClientProxy {
     // noop
   }
 
+  unwrap<T>(): T {
+    return this.pubSub as T;
+  }
+
   publish(
     _packet: ReadPacket<unknown>,
     _callback: (packet: WritePacket<unknown>) => void,

@@ -1,4 +1,4 @@
-import { Deferred } from './deferred';
+import { Deferred } from '../../src/deferred';
 
 export class WaitGroup {
   private deferred: Deferred;
