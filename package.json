@@ -45,7 +45,7 @@
     "@google-cloud/pubsub": "^6.0.0",
     "@nestjs/common": "^11.0.5",
     "@nestjs/core": "^11.0.5",
-    "@nestjs/microservices": "^11.0.5",
+    "@nestjs/microservices": "^12.0.1",
     "@testdeck/jest": "^0.3.3",
     "@types/jest": "^29.5.14",
     "@types/node": "^26.0.0",
