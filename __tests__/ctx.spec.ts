@@ -8,17 +8,15 @@ import {
   EventPattern,
   Payload,
 } from '@nestjs/microservices';
-import { suite, test } from '@testdeck/jest';
 
 import { GCPPubSubClient, GCPPubSubContext, GCPPubSubStrategy } from '../src';
 
-import { Base } from './base-suite';
+import { Base, useSuite } from './base-suite';
 
-@suite
-export class ContextSuite extends Base {
+class ContextSuite extends Base {
   protected patterns: string[] = ['topic-ctx/subscription-ctx'];
 
-  private ctrl!: Type<{ emit(): Promise<void> }>;
+  ctrl!: Type<{ emit(): Promise<void> }>;
 
   get metadata(): ModuleMetadata {
     const wg = this.wg;
@@ -29,7 +27,11 @@ export class ContextSuite extends Base {
     class TestController {
       constructor(@Inject(token) private readonly client: ClientProxy) {}
 
-      @EventPattern('topic-ctx/subscription-ctx')
+      // NestJS 12 added a typed-event overload that constrains handlers to
+      // `(data, ...args: unknown[])`, which a typed `@Ctx()` parameter does
+      // not satisfy. The explicit type argument selects the plain
+      // string-pattern overload instead.
+      @EventPattern<string>('topic-ctx/subscription-ctx')
       handle(@Payload() event: unknown, @Ctx() ctx: GCPPubSubContext) {
         expect(ctx.message).toBeInstanceOf(Message);
         expect(ctx.pattern).toBe('topic-ctx/subscription-ctx');
@@ -63,13 +65,18 @@ export class ContextSuite extends Base {
     return new GCPPubSubStrategy(this.connectionOpts);
   }
 
-  @test
-  async 'context shoud have original message and pattern'() {
-    await this.app.get(this.ctrl).emit();
-    await this.wg.wait();
-  }
-
   async after() {
     await this.app.close();
   }
 }
+
+describe('ContextSuite', () => {
+  const getSuite = useSuite(() => new ContextSuite());
+
+  it('context shoud have original message and pattern', async () => {
+    const suite = getSuite();
+
+    await suite.app.get(suite.ctrl).emit();
+    await suite.wg.wait();
+  });
+});

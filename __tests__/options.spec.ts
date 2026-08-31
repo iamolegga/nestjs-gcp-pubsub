@@ -7,7 +7,6 @@ import {
   EventPattern,
   OutgoingEvent,
 } from '@nestjs/microservices';
-import { suite, test } from '@testdeck/jest';
 
 import {
   GCPPubSubClient,
@@ -15,13 +14,12 @@ import {
   GCPPubSubStrategy,
 } from '../src';
 
-import { Base } from './base-suite';
+import { Base, useSuite } from './base-suite';
 
-@suite
-export class Options extends Base {
+class Options extends Base {
   protected patterns: string[] = ['topic-opts/subscription-opts'];
 
-  private ctrl!: Type<{ emit(): Promise<void> }>;
+  ctrl!: Type<{ emit(): Promise<void> }>;
 
   get metadata(): ModuleMetadata {
     const wg = this.wg;
@@ -89,13 +87,18 @@ export class Options extends Base {
     });
   }
 
-  @test
-  async 'options should be used'() {
-    await this.app.get(this.ctrl).emit();
-    await this.wg.wait();
-  }
-
   async after() {
     await this.app.close();
   }
 }
+
+describe('Options', () => {
+  const getSuite = useSuite(() => new Options());
+
+  it('options should be used', async () => {
+    const suite = getSuite();
+
+    await suite.app.get(suite.ctrl).emit();
+    await suite.wg.wait();
+  });
+});

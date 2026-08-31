@@ -5,20 +5,18 @@ import {
   CustomTransportStrategy,
   EventPattern,
 } from '@nestjs/microservices';
-import { suite, test } from '@testdeck/jest';
 
 import { GCPPubSubClient, GCPPubSubStrategy } from '../src';
 
-import { Base } from './base-suite';
+import { Base, useSuite } from './base-suite';
 
-@suite
-export class Multi extends Base {
+class Multi extends Base {
   protected patterns: string[] = [
     'topic-multi/subscription-multi-1',
     'topic-multi/subscription-multi-2',
   ];
 
-  private ctrl!: Type<{ emit(): Promise<void> }>;
+  ctrl!: Type<{ emit(): Promise<void> }>;
 
   get metadata(): ModuleMetadata {
     const wg = this.wg;
@@ -67,13 +65,18 @@ export class Multi extends Base {
     return new GCPPubSubStrategy(this.connectionOpts);
   }
 
-  @test
-  async 'should send and receive same data in two subscriptions'() {
-    await this.app.get(this.ctrl).emit();
-    await this.wg.wait();
-  }
-
   async after() {
     await this.app.close();
   }
 }
+
+describe('Multi', () => {
+  const getSuite = useSuite(() => new Multi());
+
+  it('should send and receive same data in two subscriptions', async () => {
+    const suite = getSuite();
+
+    await suite.app.get(suite.ctrl).emit();
+    await suite.wg.wait();
+  });
+});

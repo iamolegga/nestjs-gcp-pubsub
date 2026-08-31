@@ -5,17 +5,15 @@ import {
   CustomTransportStrategy,
   EventPattern,
 } from '@nestjs/microservices';
-import { suite, test } from '@testdeck/jest';
 
 import { GCPPubSubClient, GCPPubSubStrategy } from '../src';
 
-import { Base } from './base-suite';
+import { Base, useSuite } from './base-suite';
 
-@suite
-export class Mono extends Base {
+class Mono extends Base {
   protected patterns: string[] = ['topic-mono/subscription-mono'];
 
-  private ctrl!: Type<{ emit(): Promise<void> }>;
+  ctrl!: Type<{ emit(): Promise<void> }>;
 
   get metadata(): ModuleMetadata {
     const wg = this.wg;
@@ -58,13 +56,18 @@ export class Mono extends Base {
     return new GCPPubSubStrategy(this.connectionOpts);
   }
 
-  @test
-  async 'should send and receive same data'() {
-    await this.app.get(this.ctrl).emit();
-    await this.wg.wait();
-  }
-
   async after() {
     await this.app.close();
   }
 }
+
+describe('Mono', () => {
+  const getSuite = useSuite(() => new Mono());
+
+  it('should send and receive same data', async () => {
+    const suite = getSuite();
+
+    await suite.app.get(suite.ctrl).emit();
+    await suite.wg.wait();
+  });
+});

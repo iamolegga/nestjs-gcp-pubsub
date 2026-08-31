@@ -19,9 +19,9 @@ export abstract class Base {
     projectId: 'test',
     apiEndpoint: process.env.PUBSUB_EMULATOR_HOST,
   };
-  protected app!: INestMicroservice;
+  app!: INestMicroservice;
   protected pubSub = new PubSub(this.connectionOpts);
-  protected wg = new WaitGroup();
+  wg = new WaitGroup();
 
   async before() {
     for (const pattern of this.patterns) {
@@ -69,4 +69,24 @@ export abstract class Base {
 
     await this.pubSub.close();
   }
+}
+
+/**
+ * Wires a `Base` subclass into vitest's lifecycle the way the `@testdeck`
+ * `@suite` decorator used to: a fresh instance per test, `before` as
+ * `beforeEach` and `after` as `afterEach`.
+ */
+export function useSuite<T extends Base>(factory: () => T): () => T {
+  let instance: T;
+
+  beforeEach(async () => {
+    instance = factory();
+    await instance.before();
+  });
+
+  afterEach(async () => {
+    await instance.after();
+  });
+
+  return () => instance;
 }

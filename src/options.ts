@@ -1,8 +1,8 @@
 import {
   ClientConfig,
-  SubscriptionOptions,
-  PublishOptions,
   Message,
+  PublishOptions,
+  SubscriptionOptions,
 } from '@google-cloud/pubsub';
 import {
   Deserializer,

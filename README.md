@@ -8,10 +8,10 @@
     <img alt="npm" src="https://img.shields.io/npm/dm/nestjs-gcp-pubsub" />
   </a>
   <a href="https://github.com/iamolegga/nestjs-gcp-pubsub/actions">
-    <img alt="GitHub branch checks state" src="https://badgen.net/github/checks/iamolegga/nestjs-gcp-pubsub">
+    <img alt="GitHub branch checks state" src="https://badgen.net/github/checks/iamolegga/nestjs-gcp-pubsub/main">
   </a>
-  <a href="https://codeclimate.com/github/iamolegga/nestjs-gcp-pubsub/test_coverage">
-    <img src="https://api.codeclimate.com/v1/badges/28ec1572289cf56bc6fd/test_coverage" />
+  <a href="https://qlty.sh/gh/iamolegga/projects/nestjs-gcp-pubsub">
+    <img src="https://qlty.sh/gh/iamolegga/projects/nestjs-gcp-pubsub/coverage.svg" alt="Code Coverage" />
   </a>
   <a href="https://snyk.io/test/github/iamolegga/nestjs-gcp-pubsub">
     <img alt="Known Vulnerabilities" src="https://snyk.io/test/github/iamolegga/nestjs-gcp-pubsub/badge.svg" />
@@ -33,6 +33,15 @@ No topics and subscriptions are created automatically. Because we care about [se
 ---
 
 <p align="center"><b>No request-response messaging support and it won't be added, as it's better to use appropriate RPC transports</b></p>
+
+---
+
+<p align="center"><b>This is the documentation for v0.5. Compatibility with earlier versions:</b></p>
+
+| nestjs-gcp-pubsub | NestJS       | Node.js |
+| ----------------- | ------------ | ------- |
+| v0.5              | 11, 12       | >=22.12 |
+| [v0.4](https://github.com/iamolegga/nestjs-gcp-pubsub/tree/v0.4.0#readme) | 8, 9, 10, 11 | >=18 |
 
 ---
 
@@ -137,8 +146,10 @@ class TestController {
     //
   }
 
-  // with context you have to use decorators
-  @EventPattern('my-topic/my-subscription-two')
+  // with context you have to use decorators, and on NestJS 12 the explicit
+  // `<string>` type argument, so that the pattern is not read as a key of a
+  // typed event map (that overload does not allow a typed `@Ctx()` parameter)
+  @EventPattern<string>('my-topic/my-subscription-two')
   handle(
     @Payload() payload: MyType,
     @Ctx() ctx: GCPPubSubContext

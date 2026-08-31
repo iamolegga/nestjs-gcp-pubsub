@@ -4,17 +4,15 @@ import {
   ClientsModule,
   CustomTransportStrategy,
 } from '@nestjs/microservices';
-import { suite, test } from '@testdeck/jest';
 
 import { GCPPubSubClient, GCPPubSubStrategy } from '../src';
 
-import { Base } from './base-suite';
+import { Base, useSuite } from './base-suite';
 
-@suite
-export class Pattern extends Base {
+class Pattern extends Base {
   protected patterns: string[] = ['topic-pattern/subscription-pattern'];
 
-  private ctrl!: Type<{ emit(): Promise<void> }>;
+  ctrl!: Type<{ emit(): Promise<void> }>;
 
   get metadata(): ModuleMetadata {
     const token = Symbol();
@@ -49,12 +47,17 @@ export class Pattern extends Base {
     return new GCPPubSubStrategy(this.connectionOpts);
   }
 
-  @test
-  async 'pattern should be only string'() {
-    await expect(this.app.get(this.ctrl).emit()).rejects.toBeTruthy();
-  }
-
   async after() {
     await this.app.close();
   }
 }
+
+describe('Pattern', () => {
+  const getSuite = useSuite(() => new Pattern());
+
+  it('pattern should be only string', async () => {
+    const suite = getSuite();
+
+    await expect(suite.app.get(suite.ctrl).emit()).rejects.toBeTruthy();
+  });
+});

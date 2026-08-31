@@ -1,9 +1,9 @@
 import { Message } from '@google-cloud/pubsub';
 import {
   ConsumerDeserializer,
-  ProducerSerializer,
   IncomingEvent,
   OutgoingEvent,
+  ProducerSerializer,
 } from '@nestjs/microservices';
 
 export class JSONDeserializer implements ConsumerDeserializer {
