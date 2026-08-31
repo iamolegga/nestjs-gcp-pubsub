@@ -35,8 +35,7 @@ export class GCPPubSubClient extends ClientProxy {
     throw new Error('request-response messages are not supported');
   }
 
-  // something with types, unable to set void
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: something with types, unable to set void
   async dispatchEvent(packet: ReadPacket<unknown>): Promise<any> {
     invariant(
       typeof packet.pattern === 'string',
@@ -51,7 +50,7 @@ export class GCPPubSubClient extends ClientProxy {
     let topic = this.topics[pattern];
     if (topic) return topic;
 
-    topic = this.pubSub.topic(pattern, (this.config.topicOpts ?? {})[pattern]);
+    topic = this.pubSub.topic(pattern, this.config.topicOpts?.[pattern]);
     this.topics[pattern] = topic;
     return topic;
   }

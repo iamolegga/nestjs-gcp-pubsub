@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Message, PubSub, Subscription } from '@google-cloud/pubsub';
 import { Logger } from '@nestjs/common';
 import {
@@ -42,7 +41,7 @@ export class GCPPubSubStrategy
 
       this.subscriptions[pattern] = this.pubSub
         .topic(topic)
-        .subscription(subscription, (subscriptionOpts ?? {})[pattern])
+        .subscription(subscription, subscriptionOpts?.[pattern])
         .on('message', this.handleMessageWith(pattern, handler))
         .on('error', (err) => this.logger.error(err));
     }
@@ -59,8 +58,7 @@ export class GCPPubSubStrategy
 
   on<
     EventKey extends string = string,
-    // follow nestjs declarations
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+    // biome-ignore lint/complexity/noBannedTypes: follow nestjs declarations
     EventCallback extends Function = Function,
   >(event: EventKey, callback: EventCallback) {
     // as we have multiple underlying subscriptions, we need to pass the
@@ -97,8 +95,7 @@ export class GCPPubSubStrategy
         if (result) await result.toPromise();
         this.logger.debug(`${logAttributes} handled successfully`);
         message.ack();
-        // @ts-ignore
-      } catch (e: Error) {
+      } catch (e) {
         this.logger.debug(
           `error thrown while processing ${logAttributes}: ${JSON.stringify(
             e,

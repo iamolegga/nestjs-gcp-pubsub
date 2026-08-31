@@ -5,19 +5,17 @@ import {
   CustomTransportStrategy,
   EventPattern,
 } from '@nestjs/microservices';
-import { suite, test } from '@testdeck/jest';
 
 import { GCPPubSubClient, GCPPubSubStrategy } from '../src';
 
-import { Base } from './base-suite';
+import { Base, useSuite } from './base-suite';
 
-@suite
-export class HandleError extends Base {
+class HandleError extends Base {
   protected patterns: string[] = [
     'topic-handle-error/subscription-handle-error',
   ];
 
-  private ctrl!: Type<{ emit(): Promise<void> }>;
+  ctrl!: Type<{ emit(): Promise<void> }>;
 
   get metadata(): ModuleMetadata {
     const wg = this.wg;
@@ -65,13 +63,18 @@ export class HandleError extends Base {
     return new GCPPubSubStrategy(this.connectionOpts);
   }
 
-  @test
-  async 'should throw error and retry again same message'() {
-    await this.app.get(this.ctrl).emit();
-    await this.wg.wait();
-  }
-
   async after() {
     await this.app.close();
   }
 }
+
+describe('HandleError', () => {
+  const getSuite = useSuite(() => new HandleError());
+
+  it('should throw error and retry again same message', async () => {
+    const suite = getSuite();
+
+    await suite.app.get(suite.ctrl).emit();
+    await suite.wg.wait();
+  });
+});

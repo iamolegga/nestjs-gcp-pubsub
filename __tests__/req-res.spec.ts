@@ -4,17 +4,15 @@ import {
   ClientsModule,
   CustomTransportStrategy,
 } from '@nestjs/microservices';
-import { suite, test } from '@testdeck/jest';
 
 import { GCPPubSubClient, GCPPubSubStrategy } from '../src';
 
-import { Base } from './base-suite';
+import { Base, useSuite } from './base-suite';
 
-@suite
-export class ReqRes extends Base {
+class ReqRes extends Base {
   protected patterns: string[] = ['topic-req-res/subscription-req-res'];
 
-  private ctrl!: Type<{ emit(): Promise<void> }>;
+  ctrl!: Type<{ emit(): Promise<void> }>;
 
   get metadata(): ModuleMetadata {
     const token = Symbol();
@@ -48,12 +46,17 @@ export class ReqRes extends Base {
     return new GCPPubSubStrategy(this.connectionOpts);
   }
 
-  @test
-  async 'send should throw'() {
-    await expect(this.app.get(this.ctrl).emit()).rejects.toBeTruthy();
-  }
-
   async after() {
     await this.app.close();
   }
 }
+
+describe('ReqRes', () => {
+  const getSuite = useSuite(() => new ReqRes());
+
+  it('send should throw', async () => {
+    const suite = getSuite();
+
+    await expect(suite.app.get(suite.ctrl).emit()).rejects.toBeTruthy();
+  });
+});
