@@ -28,7 +28,7 @@ jobs:
 
       # start emulator
 
-      - uses: google-github-actions/setup-gcloud@v0
+      - uses: google-github-actions/setup-gcloud@v3
         with:
           install_components: 'beta,pubsub-emulator'
       - run: gcloud beta emulators pubsub start --project=testproject --host-port=0.0.0.0:8085 &
